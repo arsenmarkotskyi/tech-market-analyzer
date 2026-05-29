@@ -1,0 +1,62 @@
+# Technologies to search for in vacancy descriptions.
+# Matching is case-insensitive with word boundaries.
+
+technologies:
+  # Web frameworks
+  - Django
+  - Flask
+  - FastAPI
+  - aiohttp
+  - Tornado
+
+  # Databases
+  - PostgreSQL
+  - MySQL
+  - MongoDB
+  - Redis
+  - Elasticsearch
+  - SQLite
+
+  # DevOps & Cloud
+  - Docker
+  - Kubernetes
+  - AWS
+  - GCP
+  - Azure
+  - Terraform
+  - Ansible
+  - CI/CD
+  - Jenkins
+  - GitLab
+
+  # Task queues & messaging
+  - Celery
+  - RabbitMQ
+  - Kafka
+
+  # Data & ML
+  - pandas
+  - NumPy
+  - scikit-learn
+  - TensorFlow
+  - PyTorch
+
+  # Testing
+  - pytest
+  - unittest
+  - Selenium
+
+  # Other
+  - REST
+  - GraphQL
+  - Git
+  - Linux
+  - Agile
+  - Scrum
+  - microservices
+  - SQLAlchemy
+  - Pydantic
+  - TypeScript
+  - JavaScript
+  - React
+  - Vue

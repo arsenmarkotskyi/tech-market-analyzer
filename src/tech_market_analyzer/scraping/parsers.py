@@ -1,0 +1,126 @@
+"""HTML parsers for job vacancy pages."""
+
+import logging
+import re
+from datetime import datetime
+
+from bs4 import BeautifulSoup
+
+from tech_market_analyzer.domain.models import ExperienceLevel, Vacancy
+
+logger = logging.getLogger(__name__)
+
+
+def parse_vacancy_list(html: str, experience_level: ExperienceLevel) -> list[dict]:
+    """Parse vacancy listing page and extract basic vacancy data.
+
+    This is a skeleton parser for DOU.ua. Update CSS selectors after
+    inspecting the live HTML structure with browser DevTools.
+
+    Parameters
+    ----------
+    html : str
+        Raw HTML of the vacancies listing page.
+    experience_level : ExperienceLevel
+        Experience level filter applied during scraping.
+
+    Returns
+    -------
+    list[dict]
+        List of dicts with keys: id, title, company, url, description.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    vacancies: list[dict] = []
+
+    # TODO: Verify selectors against live DOU.ua HTML structure
+    for item in soup.select("li.l-vacancy"):
+        title_el = item.select_one("a.vt")
+        company_el = item.select_one("a.company")
+        if not title_el:
+            continue
+
+        url = title_el.get("href", "")
+        vacancy_id = _extract_id_from_url(url)
+
+        vacancies.append(
+            {
+                "id": vacancy_id,
+                "title": title_el.get_text(strip=True),
+                "company": company_el.get_text(strip=True) if company_el else "Unknown",
+                "url": url if url.startswith("http") else f"https://jobs.dou.ua{url}",
+                "description": "",
+            }
+        )
+
+    if not vacancies:
+        logger.warning(
+            "No vacancies parsed — CSS selectors may be outdated. "
+            "Inspect jobs.dou.ua HTML and update parsers.py"
+        )
+
+    return vacancies
+
+
+def parse_vacancy_detail(html: str) -> str:
+    """Parse full vacancy description from a detail page.
+
+    Parameters
+    ----------
+    html : str
+        Raw HTML of the vacancy detail page.
+
+    Returns
+    -------
+    str
+        Full description text.
+    """
+    soup = BeautifulSoup(html, "lxml")
+
+    # TODO: Verify selector against live DOU.ua detail page
+    description_el = soup.select_one("div.b-typo.vacancy-section")
+    if description_el:
+        return description_el.get_text(separator=" ", strip=True)
+
+    return ""
+
+
+def build_vacancy(
+    raw: dict,
+    experience_level: ExperienceLevel,
+    source: str = "dou.ua",
+) -> Vacancy:
+    """Build a Vacancy domain object from parsed raw data.
+
+    Parameters
+    ----------
+    raw : dict
+        Parsed vacancy fields.
+    experience_level : ExperienceLevel
+        Experience level for this vacancy.
+    source : str
+        Source site identifier.
+
+    Returns
+    -------
+    Vacancy
+        Populated Vacancy instance.
+    """
+    return Vacancy(
+        id=raw["id"],
+        title=raw["title"],
+        company=raw["company"],
+        description=raw.get("description", ""),
+        experience_level=experience_level,
+        source=source,
+        scraped_at=datetime.now(),
+        salary=raw.get("salary"),
+        views=raw.get("views"),
+        applications=raw.get("applications"),
+        url=raw.get("url"),
+    )
+
+
+def _extract_id_from_url(url: str) -> str:
+    """Extract numeric vacancy ID from URL path."""
+    match = re.search(r"/vacancies/(\d+)", url)
+    return match.group(1) if match else url.strip("/").split("/")[-1]
