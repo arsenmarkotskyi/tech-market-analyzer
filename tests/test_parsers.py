@@ -33,6 +33,47 @@ def test_parse_vacancy_list_extracts_basic_fields():
     assert results[0]["title"] == "Python Developer"
     assert results[0]["company"] == "Test Company"
     assert results[0]["id"] == "123456"
+    assert results[0]["salary"] is None
+
+
+def test_parse_vacancy_list_extracts_salary():
+    html = """
+    <html><body>
+    <li class="l-vacancy">
+      <div class="title">
+        <a class="vt" href="https://jobs.dou.ua/companies/orange-uni/vacancies/348148/">
+          Senior Backend Developer (Python, Django) — Remote
+        </a>
+        <strong>в <a class="company" href="...">Orange Uni</a></strong>
+        <span class="salary">$2000–3200</span>
+        <span class="cities bi bi-geo-alt-fill"> віддалено</span>
+      </div>
+    </li>
+    </body></html>
+    """
+    results = parse_vacancy_list(html, ExperienceLevel.SENIOR)
+    assert len(results) == 1
+    assert results[0]["salary"] == "$2000–3200"
+    assert results[0]["company"] == "Orange Uni"
+
+
+def test_parse_vacancy_list_extracts_location():
+    html = """
+    <html><body>
+    <li class="l-vacancy">
+      <div class="title">
+        <a class="vt"
+           href="https://jobs.dou.ua/companies/come-back-agency/vacancies/359598/">
+          Junior Python Developer
+        </a>
+        <strong>в <a class="company">Come Back Agency</a></strong>
+        <span class="cities bi bi-geo-alt-fill"> віддалено</span>
+      </div>
+    </li>
+    </body></html>
+    """
+    results = parse_vacancy_list(html, ExperienceLevel.JUNIOR)
+    assert results[0]["location"] == "віддалено"
 
 
 def test_parse_vacancy_detail_extracts_description():

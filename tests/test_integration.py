@@ -31,6 +31,9 @@ def test_parse_real_dou_listing_fixture():
     assert all("id" in item and "title" in item for item in results)
     assert all(item["url"].startswith("http") for item in results)
 
+    salaries = [item["salary"] for item in results if item.get("salary")]
+    assert "$500–1000" in salaries
+
 
 def test_analyze_junior_snapshot_roundtrip(tmp_path):
     """Load a snapshot fixture, analyze it, and verify technology counts."""

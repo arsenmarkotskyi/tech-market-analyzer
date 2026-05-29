@@ -27,12 +27,11 @@ def parse_vacancy_list(html: str, experience_level: ExperienceLevel) -> list[dic
     Returns
     -------
     list[dict]
-        List of dicts with keys: id, title, company, url, description.
+        List of dicts with keys: id, title, company, url, description, salary, location.
     """
     soup = BeautifulSoup(html, "lxml")
     vacancies: list[dict] = []
 
-    # TODO: Verify selectors against live DOU.ua HTML structure
     for item in soup.select("li.l-vacancy"):
         title_el = item.select_one("a.vt")
         company_el = item.select_one("a.company")
@@ -41,6 +40,8 @@ def parse_vacancy_list(html: str, experience_level: ExperienceLevel) -> list[dic
 
         url = title_el.get("href", "")
         vacancy_id = _extract_id_from_url(url)
+        salary_el = item.select_one("span.salary")
+        location_el = item.select_one("span.cities")
 
         vacancies.append(
             {
@@ -49,6 +50,8 @@ def parse_vacancy_list(html: str, experience_level: ExperienceLevel) -> list[dic
                 "company": company_el.get_text(strip=True) if company_el else "Unknown",
                 "url": url if url.startswith("http") else f"https://jobs.dou.ua{url}",
                 "description": "",
+                "salary": salary_el.get_text(strip=True) if salary_el else None,
+                "location": location_el.get_text(strip=True) if location_el else None,
             }
         )
 
@@ -67,19 +70,18 @@ def parse_vacancy_detail(html: str) -> str:
 
 
 def parse_engagement_stats(html: str) -> dict[str, int | None]:
-    """Extract public views/applications counts when present on the page."""
+    """Extract public applications count when present on the detail page."""
     soup = BeautifulSoup(html, "lxml")
     text = soup.get_text(" ", strip=True)
 
-    views = _find_count(text, [r"(\d+)\s*перегляд", r"(\d+)\s*views"])
     applications = _find_count(
         text, [r"(\d+)\s*відгук", r"(\d+)\s*applications?", r"(\d+)\s*replies"]
     )
-    return {"views": views, "applications": applications}
+    return {"applications": applications}
 
 
 def parse_vacancy_detail_page(html: str) -> dict[str, str | int | None]:
-    """Parse description and optional engagement stats from a detail page."""
+    """Parse description and optional applications count from a detail page."""
     soup = BeautifulSoup(html, "lxml")
     description_el = soup.select_one("div.b-typo.vacancy-section")
     description = (
@@ -88,7 +90,6 @@ def parse_vacancy_detail_page(html: str) -> dict[str, str | int | None]:
     engagement = parse_engagement_stats(html)
     return {
         "description": description,
-        "views": engagement["views"],
         "applications": engagement["applications"],
     }
 
@@ -132,7 +133,7 @@ def build_vacancy(
         source=source,
         scraped_at=datetime.now(),
         salary=raw.get("salary"),
-        views=raw.get("views"),
+        location=raw.get("location"),
         applications=raw.get("applications"),
         url=raw.get("url"),
     )

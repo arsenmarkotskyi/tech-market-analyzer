@@ -132,7 +132,7 @@ def run_engagement_analysis(
     latest: bool = False,
     level: ExperienceLevel = ExperienceLevel.JUNIOR,
 ) -> Path:
-    """Analyze views/applications correlations when data is available."""
+    """Analyze applications correlations when data is available."""
     settings = get_settings()
     _, snapshot = _load_snapshot(input_path, latest, level)
 
@@ -147,7 +147,6 @@ def run_engagement_analysis(
 
     print(f"\nEngagement report ({level.value}):")
     print(f"  Vacancies: {report.total_vacancies}")
-    print(f"  With views: {report.with_views}")
     print(f"  With applications: {report.with_applications}")
     for key, value in report.correlations.items():
         print(f"  {key}: {value}")

@@ -197,13 +197,13 @@ tech-analyzer analyze-nlp --latest --level senior
 
 Генерує `{level}_nlp_stats.json` та `{level}_wordcloud.png` без `technologies.yaml`.
 
-### Кореляційний аналіз views/applications
+### Кореляційний аналіз applications
 
 ```bash
 tech-analyzer analyze-engagement --latest --level senior
 ```
 
-> **Примітка:** DOU.ua не показує перегляди/відгуки публічно без логіну. Модуль готовий і працює, коли дані є в snapshot.
+> **Примітка:** DOU.ua показує кількість відгуків лише на частині вакансій. Локація (`віддалено`, місто) парситься зі списку вакансій.
 
 ## Disclaimer
 

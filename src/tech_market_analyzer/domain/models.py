@@ -60,8 +60,8 @@ class Vacancy:
         Timestamp when the vacancy was scraped.
     salary : str | None
         Salary text if available.
-    views : int | None
-        Number of views if publicly available.
+    location : str | None
+        City or work format (e.g. ``віддалено``, ``Київ``) from listing page.
     applications : int | None
         Number of applications if publicly available.
     url : str | None
@@ -76,7 +76,7 @@ class Vacancy:
     source: str
     scraped_at: datetime
     salary: str | None = None
-    views: int | None = None
+    location: str | None = None
     applications: int | None = None
     url: str | None = None
 

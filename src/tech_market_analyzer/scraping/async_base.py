@@ -2,11 +2,26 @@
 
 import asyncio
 import logging
+import ssl
 import time
 
 import aiohttp
+import certifi
 
 logger = logging.getLogger(__name__)
+
+
+def make_aiohttp_ssl_context() -> ssl.SSLContext:
+    """Build SSL context using certifi CA bundle."""
+    return ssl.create_default_context(cafile=certifi.where())
+
+
+def create_aiohttp_session(**kwargs: object) -> aiohttp.ClientSession:
+    """Create aiohttp session with certifi CA bundle (fixes macOS SSL errors)."""
+    connector = aiohttp.TCPConnector(ssl=make_aiohttp_ssl_context())
+    return aiohttp.ClientSession(  # type: ignore[arg-type]
+        connector=connector, **kwargs
+    )
 
 
 class AsyncBaseScraper:

@@ -13,7 +13,7 @@
       "source": "dou.ua",
       "scraped_at": "2026-05-29T12:00:00",
       "salary": null,
-      "views": null,
+      "location": "віддалено",
       "applications": null,
       "url": "https://jobs.dou.ua/vacancies/1/"
     },
@@ -26,7 +26,7 @@
       "source": "dou.ua",
       "scraped_at": "2026-05-29T12:00:00",
       "salary": null,
-      "views": null,
+      "location": "віддалено",
       "applications": null,
       "url": "https://jobs.dou.ua/vacancies/2/"
     }

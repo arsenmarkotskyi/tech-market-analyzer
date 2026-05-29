@@ -91,7 +91,7 @@ def _vacancy_to_dict(vacancy: Vacancy) -> dict:
         "source": vacancy.source,
         "scraped_at": vacancy.scraped_at.isoformat(),
         "salary": vacancy.salary,
-        "views": vacancy.views,
+        "location": vacancy.location,
         "applications": vacancy.applications,
         "url": vacancy.url,
     }
@@ -108,7 +108,7 @@ def _dict_to_vacancy(data: dict) -> Vacancy:
         source=data["source"],
         scraped_at=datetime.fromisoformat(data["scraped_at"]),
         salary=data.get("salary"),
-        views=data.get("views"),
+        location=data.get("location"),
         applications=data.get("applications"),
         url=data.get("url"),
     )

@@ -72,7 +72,6 @@ class DouScraper(BaseScraper, Scraper):
                     detail_html = self.fetch_page(detail_url)
                     detail = parse_vacancy_detail_page(detail_html)
                     raw["description"] = detail["description"]
-                    raw["views"] = detail.get("views")
                     raw["applications"] = detail.get("applications")
 
                     all_vacancies.append(

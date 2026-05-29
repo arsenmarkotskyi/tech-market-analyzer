@@ -7,7 +7,10 @@ from datetime import date
 import aiohttp
 
 from tech_market_analyzer.domain.models import ExperienceLevel, Vacancy, VacancySnapshot
-from tech_market_analyzer.scraping.async_base import AsyncBaseScraper
+from tech_market_analyzer.scraping.async_base import (
+    AsyncBaseScraper,
+    create_aiohttp_session,
+)
 from tech_market_analyzer.scraping.dou_urls import EXPERIENCE_SLUGS, build_search_url
 from tech_market_analyzer.scraping.parsers import (
     build_vacancy,
@@ -51,7 +54,6 @@ class AsyncDouScraper(AsyncBaseScraper):
         detail_html = await self.fetch_page(session, detail_url)
         detail = parse_vacancy_detail_page(detail_html)
         raw["description"] = detail["description"]
-        raw["views"] = detail.get("views")
         raw["applications"] = detail.get("applications")
         return build_vacancy(raw, experience_level, source="dou.ua")
 
@@ -61,7 +63,7 @@ class AsyncDouScraper(AsyncBaseScraper):
         seen_ids: set[str] = set()
         timeout = aiohttp.ClientTimeout(total=60)
 
-        async with aiohttp.ClientSession(timeout=timeout) as session:
+        async with create_aiohttp_session(timeout=timeout) as session:
             for exp_slug in EXPERIENCE_SLUGS[experience_level]:
                 logger.info(
                     "Async scraping level=%s with exp=%s",

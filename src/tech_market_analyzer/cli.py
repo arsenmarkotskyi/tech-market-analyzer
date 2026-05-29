@@ -91,7 +91,7 @@ def analyze_engagement_cmd(
     latest: bool = typer.Option(False, "--latest"),
     level: str = typer.Option("junior", "--level", "-l"),
 ) -> None:
-    """Analyze views/applications correlations when available in snapshots."""
+    """Analyze applications correlations when available in snapshots."""
     report_path = run_engagement_analysis(
         input_path=input_file,
         latest=latest,
