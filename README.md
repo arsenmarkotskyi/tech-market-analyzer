@@ -176,11 +176,34 @@ pre-commit run --all-files
 
 CI (GitHub Actions) запускає `flake8`, `black`, `isort` та `pytest` на Python 3.11 і 3.12 при кожному push/PR.
 
-## Майбутні покращення (optional)
+## Майбутні покращення (optional) — реалізовано
 
-- Async scraping з `aiohttp`
-- NLP-аналіз без config через `nltk` + `wordcloud`
-- Кореляційний аналіз views/applications
+### Async scraping (`aiohttp`)
+
+```bash
+pip install -e ".[async]"
+tech-analyzer scrape --level junior --async --force
+tech-analyzer pipeline --all-levels --async
+```
+
+Паралельне завантаження деталей вакансій з обмеженням `ASYNC_MAX_CONCURRENCY` (за замовч. 3).
+
+### NLP-аналіз без config (`nltk` + `wordcloud`)
+
+```bash
+pip install -e ".[nlp]"
+tech-analyzer analyze-nlp --latest --level senior
+```
+
+Генерує `{level}_nlp_stats.json` та `{level}_wordcloud.png` без `technologies.yaml`.
+
+### Кореляційний аналіз views/applications
+
+```bash
+tech-analyzer analyze-engagement --latest --level senior
+```
+
+> **Примітка:** DOU.ua не показує перегляди/відгуки публічно без логіну. Модуль готовий і працює, коли дані є в snapshot.
 
 ## Disclaimer
 

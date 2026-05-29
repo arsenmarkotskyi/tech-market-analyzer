@@ -62,26 +62,44 @@ def parse_vacancy_list(html: str, experience_level: ExperienceLevel) -> list[dic
 
 
 def parse_vacancy_detail(html: str) -> str:
-    """Parse full vacancy description from a detail page.
+    """Parse full vacancy description from a detail page."""
+    return parse_vacancy_detail_page(html)["description"]
 
-    Parameters
-    ----------
-    html : str
-        Raw HTML of the vacancy detail page.
 
-    Returns
-    -------
-    str
-        Full description text.
-    """
+def parse_engagement_stats(html: str) -> dict[str, int | None]:
+    """Extract public views/applications counts when present on the page."""
     soup = BeautifulSoup(html, "lxml")
+    text = soup.get_text(" ", strip=True)
 
-    # TODO: Verify selector against live DOU.ua detail page
+    views = _find_count(text, [r"(\d+)\s*перегляд", r"(\d+)\s*views"])
+    applications = _find_count(
+        text, [r"(\d+)\s*відгук", r"(\d+)\s*applications?", r"(\d+)\s*replies"]
+    )
+    return {"views": views, "applications": applications}
+
+
+def parse_vacancy_detail_page(html: str) -> dict[str, str | int | None]:
+    """Parse description and optional engagement stats from a detail page."""
+    soup = BeautifulSoup(html, "lxml")
     description_el = soup.select_one("div.b-typo.vacancy-section")
-    if description_el:
-        return description_el.get_text(separator=" ", strip=True)
+    description = (
+        description_el.get_text(separator=" ", strip=True) if description_el else ""
+    )
+    engagement = parse_engagement_stats(html)
+    return {
+        "description": description,
+        "views": engagement["views"],
+        "applications": engagement["applications"],
+    }
 
-    return ""
+
+def _find_count(text: str, patterns: list[str]) -> int | None:
+    """Return first integer match from regex patterns."""
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
+    return None
 
 
 def build_vacancy(

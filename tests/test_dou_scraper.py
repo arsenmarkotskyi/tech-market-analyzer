@@ -1,7 +1,7 @@
-"""Tests for DOU scraper URL building."""
+"""Tests for DOU URL builders."""
 
 from tech_market_analyzer.domain.models import ExperienceLevel
-from tech_market_analyzer.scraping.dou_scraper import EXPERIENCE_SLUGS, DouScraper
+from tech_market_analyzer.scraping.dou_urls import EXPERIENCE_SLUGS, build_search_url
 
 
 def test_experience_slugs_use_dou_ranges():
@@ -11,12 +11,11 @@ def test_experience_slugs_use_dou_ranges():
 
 
 def test_build_search_url_uses_category_and_exp_range():
-    scraper = DouScraper()
-    url = scraper._build_search_url("1-3", page=0)
+    url = build_search_url("https://jobs.dou.ua", "Python", "1-3", page=0)
     assert "category=Python" in url
     assert "exp=1-3" in url
     assert "offset=0" in url
 
-    url_page_2 = scraper._build_search_url("0-1", page=2)
+    url_page_2 = build_search_url("https://jobs.dou.ua", "Python", "0-1", page=2)
     assert "exp=0-1" in url_page_2
     assert "offset=40" in url_page_2

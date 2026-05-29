@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     category: str = "Python"
     request_delay_seconds: float = 1.5
     max_pages: int = 10
+    async_max_concurrency: int = 3
     user_agent: str = "TechMarketAnalyzer/0.1"
 
     raw_data_dir: Path = Field(default=PROJECT_ROOT / "data" / "raw")
