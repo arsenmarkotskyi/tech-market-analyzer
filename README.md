@@ -166,6 +166,16 @@ tech-analyzer history 2026-05-20 2026-05-29 --level senior
 pytest
 ```
 
+### Pre-commit (локально)
+
+```bash
+pip install -e ".[dev]"
+pre-commit install
+pre-commit run --all-files
+```
+
+CI (GitHub Actions) запускає `flake8`, `black`, `isort` та `pytest` на Python 3.11 і 3.12 при кожному push/PR.
+
 ## Майбутні покращення (optional)
 
 - Async scraping з `aiohttp`

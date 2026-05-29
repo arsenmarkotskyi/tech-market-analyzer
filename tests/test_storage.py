@@ -1,6 +1,5 @@
 """Tests for JSON vacancy storage."""
 
-import json
 from datetime import date, datetime
 from pathlib import Path
 

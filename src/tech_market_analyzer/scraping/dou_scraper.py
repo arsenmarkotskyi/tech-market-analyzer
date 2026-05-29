@@ -5,11 +5,7 @@ from datetime import date
 from urllib.parse import quote_plus
 
 from tech_market_analyzer.domain.interfaces import Scraper
-from tech_market_analyzer.domain.models import (
-    ExperienceLevel,
-    Vacancy,
-    VacancySnapshot,
-)
+from tech_market_analyzer.domain.models import ExperienceLevel, Vacancy, VacancySnapshot
 from tech_market_analyzer.scraping.base import BaseScraper
 from tech_market_analyzer.scraping.parsers import (
     build_vacancy,
@@ -22,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 # DOU.ua experience ranges (?exp=...) — see jobs.dou.ua vacancy filters
 EXPERIENCE_SLUGS: dict[ExperienceLevel, list[str]] = {
-    ExperienceLevel.JUNIOR: ["0-1"],           # початківці, < 1 року
-    ExperienceLevel.MIDDLE: ["1-3"],            # 1…3 роки
+    ExperienceLevel.JUNIOR: ["0-1"],  # початківці, < 1 року
+    ExperienceLevel.MIDDLE: ["1-3"],  # 1…3 роки
     ExperienceLevel.SENIOR: ["3-5", "5plus"],  # 3…5 років + 5+ років
 }
 

@@ -6,13 +6,9 @@ from typing import Optional
 
 import typer
 
-from tech_market_analyzer.analysis.runner import (
-    run_analysis,
-    run_history_comparison,
-)
+from tech_market_analyzer.analysis.runner import run_analysis, run_history_comparison
 from tech_market_analyzer.domain.models import ExperienceLevel
 from tech_market_analyzer.scraping.runner import run_scraping
-from tech_market_analyzer.settings import get_settings
 
 app = typer.Typer(
     name="tech-analyzer",
@@ -77,14 +73,12 @@ def pipeline(
     top_n: int = typer.Option(15, "--top-n"),
 ) -> None:
     """Run full pipeline: scrape → analyze for all levels."""
-    settings = get_settings()
     levels = list(ExperienceLevel) if all_levels else [ExperienceLevel.JUNIOR]
 
     for exp_level in levels:
         typer.echo(f"\n=== {exp_level.value.upper()} ===")
         paths = run_scraping(level=exp_level, force=force)
         if not paths:
-            latest = settings.raw_data_dir / f"{exp_level.value}"
             typer.echo(f"No new snapshot for {exp_level.value}, trying latest...")
         run_analysis(latest=True, level=exp_level, top_n=top_n)
 

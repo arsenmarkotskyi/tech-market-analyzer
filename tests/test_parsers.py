@@ -1,8 +1,6 @@
 """Tests for HTML parsers."""
 
-from datetime import date, datetime
-
-from tech_market_analyzer.domain.models import ExperienceLevel, VacancySnapshot
+from tech_market_analyzer.domain.models import ExperienceLevel
 from tech_market_analyzer.scraping.parsers import (
     build_vacancy,
     parse_vacancy_detail,

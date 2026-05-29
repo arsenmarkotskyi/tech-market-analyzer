@@ -64,9 +64,7 @@ def create_bar_chart(
     return output_path
 
 
-def _create_empty_chart(
-    experience_level: ExperienceLevel, output_path: Path
-) -> None:
+def _create_empty_chart(experience_level: ExperienceLevel, output_path: Path) -> None:
     """Save a placeholder chart when no data is available."""
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.text(

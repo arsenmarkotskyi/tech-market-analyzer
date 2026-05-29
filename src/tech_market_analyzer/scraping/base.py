@@ -77,7 +77,7 @@ class BaseScraper(ABC):
             except httpx.HTTPError as exc:
                 last_error = exc
                 logger.warning("Request failed (attempt %d): %s", attempt + 1, exc)
-                time.sleep(2 ** attempt)
+                time.sleep(2**attempt)
         raise last_error  # type: ignore[misc]
 
     def close(self) -> None:

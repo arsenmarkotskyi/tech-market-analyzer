@@ -1,7 +1,7 @@
 """Tests for DOU scraper URL building."""
 
 from tech_market_analyzer.domain.models import ExperienceLevel
-from tech_market_analyzer.scraping.dou_scraper import DouScraper, EXPERIENCE_SLUGS
+from tech_market_analyzer.scraping.dou_scraper import EXPERIENCE_SLUGS, DouScraper
 
 
 def test_experience_slugs_use_dou_ranges():

@@ -1,0 +1,34 @@
+{
+  "snapshot_date": "2026-05-29",
+  "experience_level": "junior",
+  "source": "dou.ua",
+  "total": 2,
+  "vacancies": [
+    {
+      "id": "1",
+      "title": "Junior Python Developer",
+      "company": "Test Co",
+      "description": "Python developer with Django, PostgreSQL, Docker, and Git experience.",
+      "experience_level": "junior",
+      "source": "dou.ua",
+      "scraped_at": "2026-05-29T12:00:00",
+      "salary": null,
+      "views": null,
+      "applications": null,
+      "url": "https://jobs.dou.ua/vacancies/1/"
+    },
+    {
+      "id": "2",
+      "title": "Python Support Engineer",
+      "company": "Test Co",
+      "description": "Support role with Python, Django, PostgreSQL, and AWS.",
+      "experience_level": "junior",
+      "source": "dou.ua",
+      "scraped_at": "2026-05-29T12:00:00",
+      "salary": null,
+      "views": null,
+      "applications": null,
+      "url": "https://jobs.dou.ua/vacancies/2/"
+    }
+  ]
+}

@@ -7,7 +7,6 @@ from pathlib import Path
 from tech_market_analyzer.domain.models import (
     ExperienceLevel,
     TechnologyStats,
-    Vacancy,
     VacancySnapshot,
 )
 
@@ -92,9 +91,7 @@ class VacancyStorage(ABC):
         """
 
     @abstractmethod
-    def get_latest_snapshot(
-        self, experience_level: ExperienceLevel
-    ) -> Path | None:
+    def get_latest_snapshot(self, experience_level: ExperienceLevel) -> Path | None:
         """Return path to the most recent snapshot for a level.
 
         Parameters

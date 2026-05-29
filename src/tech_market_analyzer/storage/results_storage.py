@@ -42,7 +42,9 @@ class FileResultsStorage(ResultsStorage):
             "experience_level": experience_level.value,
             "technologies": [_stats_to_dict(s) for s in stats],
         }
-        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         return path
 
     def save_chart(

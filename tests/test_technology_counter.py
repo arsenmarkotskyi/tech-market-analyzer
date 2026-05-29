@@ -36,7 +36,9 @@ def test_technology_counter_counts_mentions():
         ]
     )
     counter = TechnologyCounter()
-    stats = counter.analyze(snapshot, ["Django", "PostgreSQL", "FastAPI", "Redis", "Flask"])
+    stats = counter.analyze(
+        snapshot, ["Django", "PostgreSQL", "FastAPI", "Redis", "Flask"]
+    )
 
     stats_map = {s.technology: s.count for s in stats}
     assert stats_map["Django"] == 2

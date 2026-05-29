@@ -134,7 +134,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.compare:
-        run_history_comparison(args.compare[0], args.compare[1], ExperienceLevel.from_string(args.level))
+        run_history_comparison(
+            args.compare[0], args.compare[1], ExperienceLevel.from_string(args.level)
+        )
     else:
         run_analysis(
             input_path=args.input,

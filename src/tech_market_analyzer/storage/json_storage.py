@@ -28,7 +28,9 @@ class JsonVacancyStorage(VacancyStorage):
 
     def _snapshot_filename(self, snapshot: VacancySnapshot) -> str:
         """Build filename for a snapshot."""
-        return f"{snapshot.snapshot_date.isoformat()}_{snapshot.experience_level.value}.json"
+        date_str = snapshot.snapshot_date.isoformat()
+        level = snapshot.experience_level.value
+        return f"{date_str}_{level}.json"
 
     def save_snapshot(self, snapshot: VacancySnapshot) -> Path:
         """Save snapshot to JSON file."""
@@ -40,7 +42,9 @@ class JsonVacancyStorage(VacancyStorage):
             "total": snapshot.total,
             "vacancies": [_vacancy_to_dict(v) for v in snapshot.vacancies],
         }
-        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         return path
 
     def load_snapshot(self, path: Path) -> VacancySnapshot:
@@ -65,9 +69,7 @@ class JsonVacancyStorage(VacancyStorage):
         suffix = f"_{experience_level.value}.json"
         return [f for f in files if f.name.endswith(suffix)]
 
-    def get_latest_snapshot(
-        self, experience_level: ExperienceLevel
-    ) -> Path | None:
+    def get_latest_snapshot(self, experience_level: ExperienceLevel) -> Path | None:
         """Return the newest snapshot path for a given level."""
         snapshots = self.list_snapshots(experience_level)
         return snapshots[0] if snapshots else None
