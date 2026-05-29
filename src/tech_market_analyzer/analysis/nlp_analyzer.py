@@ -12,8 +12,8 @@ from tech_market_analyzer.domain.models import ExperienceLevel, VacancySnapshot
 
 logger = logging.getLogger(__name__)
 
-# Extra stop words common in job postings (EN + UA)
-EXTRA_STOPWORDS = {
+# Extra stop words for job postings (English + Ukrainian DOU.ua text)
+_EN_STOPWORDS = {
     "the",
     "and",
     "for",
@@ -75,6 +75,8 @@ EXTRA_STOPWORDS = {
     "full",
     "time",
     "part",
+}
+_UA_STOPWORDS = {
     "в",
     "і",
     "та",
@@ -101,6 +103,7 @@ EXTRA_STOPWORDS = {
     "розробник",
     "вакансія",
 }
+EXTRA_STOPWORDS = _EN_STOPWORDS | _UA_STOPWORDS
 
 
 @dataclass

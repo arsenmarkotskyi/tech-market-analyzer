@@ -75,7 +75,12 @@ def parse_engagement_stats(html: str) -> dict[str, int | None]:
     text = soup.get_text(" ", strip=True)
 
     applications = _find_count(
-        text, [r"(\d+)\s*відгук", r"(\d+)\s*applications?", r"(\d+)\s*replies"]
+        text,
+        [
+            r"(\d+)\s*відгук",  # Ukrainian: applications/replies
+            r"(\d+)\s*applications?",
+            r"(\d+)\s*replies",
+        ],
     )
     return {"applications": applications}
 

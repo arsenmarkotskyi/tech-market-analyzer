@@ -61,7 +61,7 @@ class Vacancy:
     salary : str | None
         Salary text if available.
     location : str | None
-        City or work format (e.g. ``віддалено``, ``Київ``) from listing page.
+        City or work format (e.g. ``remote``, ``Kyiv``) from listing page.
     applications : int | None
         Number of applications if publicly available.
     url : str | None

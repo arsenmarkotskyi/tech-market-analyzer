@@ -1,38 +1,38 @@
 # Tech Market Analyzer
 
-Сервіс для збору публічних вакансій Python-розробників та аналізу попиту на технології на ринку праці.
+A service that scrapes public Python developer vacancies and analyzes technology demand on the job market.
 
-## Можливості
+## Features
 
-- **Scraping** — збір вакансій з [jobs.dou.ua](https://jobs.dou.ua) (публічні дані, без авторизації)
-- **Analysis** — підрахунок згадок технологій у описах вакансій
-- **Візуалізація** — bar chart топ-технологій
-- **Історія** — збереження знімків для порівняння трендів у часі
-- **Рівні досвіду** — окремий аналіз для junior / middle / senior
-- **Незалежні модулі** — scraping і analysis запускаються окремо (SRP)
+- **Scraping** — collect vacancies from [jobs.dou.ua](https://jobs.dou.ua) (public data, no authentication)
+- **Analysis** — count technology mentions in vacancy descriptions
+- **Visualization** — bar charts of top technologies
+- **History** — save snapshots to compare trends over time
+- **Experience levels** — separate analysis for junior / middle / senior
+- **Independent modules** — scraping and analysis run separately (SRP)
 
-## Структура проекту
+## Project structure
 
 ```
 tech-market-analyzer/
 ├── config/
-│   └── technologies.yaml     # Список технологій для пошуку
+│   └── technologies.yaml     # Technology keywords to search for
 ├── docs/
-│   └── images/               # Скріншоти діаграм для README
+│   └── images/               # Chart screenshots for README
 ├── src/tech_market_analyzer/
 │   ├── settings.py           # Pydantic Settings
-│   ├── domain/               # Моделі та інтерфейси
-│   ├── scraping/             # Частина 1: збір даних
-│   ├── analysis/             # Частина 2: аналіз
-│   ├── storage/              # JSON + результати
-│   └── cli.py                # Єдина точка входу
+│   ├── domain/               # Models and interfaces
+│   ├── scraping/             # Part 1: data collection
+│   ├── analysis/             # Part 2: analysis
+│   ├── storage/              # JSON + results
+│   └── cli.py                # Single entry point
 ├── data/
-│   ├── raw/                  # JSON знімки вакансій
-│   └── results/              # Діаграми + статистика
+│   ├── raw/                  # Vacancy JSON snapshots
+│   └── results/              # Charts + statistics
 └── tests/
 ```
 
-## Встановлення
+## Installation
 
 ```bash
 git clone https://github.com/arsenmarkotskyi/tech-market-analyzer.git
@@ -45,79 +45,79 @@ pip install -e ".[dev]"
 cp .env.example .env
 ```
 
-## Використання
+## Usage
 
-### Повний pipeline
+### Full pipeline
 
 ```bash
-# scrape → analyze для junior, middle, senior
+# scrape → analyze for junior, middle, senior
 tech-analyzer pipeline --all-levels --force
 ```
 
-Приклад виводу після запуску (2026-05-29):
+Example output (snapshot 2026-05-29):
 
-| Рівень | Фільтр DOU | Вакансій | Топ-3 технології |
-|--------|------------|----------|------------------|
+| Level | DOU filter | Vacancies | Top 3 technologies |
+|-------|------------|-----------|-------------------|
 | junior | `exp=0-1` | 7 | Docker, Git, PostgreSQL |
 | middle | `exp=1-3` | 20 | PostgreSQL, Docker, FastAPI |
 | senior | `exp=3-5` + `exp=5plus` | 40 | CI/CD, Docker, PostgreSQL |
 
-Файли: `data/raw/2026-05-29_{level}.json` та `data/results/2026-05-29/{level}_*`.
+Output files: `data/raw/2026-05-29_{level}.json` and `data/results/2026-05-29/{level}_*`.
 
-### Окремо: Scraping
+### Scraping only
 
 ```bash
-# Один рівень
+# Single level
 tech-analyzer scrape --level senior
 
-# Всі рівні
+# All levels
 tech-analyzer scrape --all-levels
 
-# Перезаписати сьогоднішній знімок
+# Overwrite today's snapshot
 tech-analyzer scrape --all-levels --force
 ```
 
-### Окремо: Analysis
+### Analysis only
 
 ```bash
-# Останній знімок
+# Latest snapshot
 tech-analyzer analyze --latest --level senior
 
-# Конкретний файл
+# Specific file
 tech-analyzer analyze --input data/raw/2026-05-29_senior.json
 ```
 
-### Порівняння історії
+### History comparison
 
 ```bash
 tech-analyzer history 2026-05-20 2026-05-29 --level senior
 ```
 
-## Приклад результату
+## Example results
 
-Після аналізу в `data/results/YYYY-MM-DD/` з'являться:
+After analysis, `data/results/YYYY-MM-DD/` contains:
 
-- `{level}_bar_chart.png` — діаграма топ-технологій
-- `{level}_stats.json` — статистика у JSON
+- `{level}_bar_chart.png` — top technologies chart
+- `{level}_stats.json` — statistics in JSON
 
-### Аналіз ринку (знімок 2026-05-29, [jobs.dou.ua](https://jobs.dou.ua))
+### Market analysis (snapshot 2026-05-29, [jobs.dou.ua](https://jobs.dou.ua))
 
-**Загальні висновки:**
+**Key findings:**
 
-- **Docker** і **PostgreSQL** — найстабільніший попит: присутні у топ-3 на всіх рівнях досвіду.
-- **CI/CD** різко зростає з рівнем: 57% (junior) → 15% (middle) → **53% (senior)** — для senior це №1 технологія.
-- **FastAPI** найпопулярніший серед middle (40%), тоді як **Django** сильніший на senior (30%).
-- Junior-ринок малий (7 вакансій), але вже вимагає DevOps-базу: Docker (86%), Git (86%), AWS (57%).
+- **Docker** and **PostgreSQL** show the steadiest demand — top 3 at every experience level.
+- **CI/CD** grows sharply with seniority: 57% (junior) → 15% (middle) → **53% (senior)** — #1 for senior roles.
+- **FastAPI** is most popular among middle (40%), while **Django** is stronger for senior (30%).
+- The junior market is small (7 vacancies) but already expects DevOps basics: Docker (86%), Git (86%), AWS (57%).
 
-**Діаграми по рівнях:**
+**Charts by level:**
 
 | Junior (7) | Middle (20) | Senior (40) |
 |:---:|:---:|:---:|
 | ![Junior](docs/images/junior_bar_chart.png) | ![Middle](docs/images/middle_bar_chart.png) | ![Senior](docs/images/senior_bar_chart.png) |
 
-### Топ-5 технологій по рівнях
+### Top 5 technologies by level
 
-**Junior** (`exp=0-1`, 7 вакансій):
+**Junior** (`exp=0-1`, 7 vacancies):
 
 ```
    1. Docker        6  (85.7%)
@@ -127,7 +127,7 @@ tech-analyzer history 2026-05-20 2026-05-29 --level senior
    5. CI/CD         4  (57.1%)
 ```
 
-**Middle** (`exp=1-3`, 20 вакансій):
+**Middle** (`exp=1-3`, 20 vacancies):
 
 ```
    1. PostgreSQL    9  (45.0%)
@@ -137,7 +137,7 @@ tech-analyzer history 2026-05-20 2026-05-29 --level senior
    5. Linux         8  (40.0%)
 ```
 
-**Senior** (`exp=3-5` + `exp=5plus`, 40 вакансій):
+**Senior** (`exp=3-5` + `exp=5plus`, 40 vacancies):
 
 ```
    1. CI/CD        21  (52.5%)
@@ -147,26 +147,26 @@ tech-analyzer history 2026-05-20 2026-05-29 --level senior
    5. Redis        14  (35.0%)
 ```
 
-> **Примітка про DOU.ua:** фільтр категорії використовує `?category=Python` (не `search`).
-> Для рівнів досвіду DOU використовує діапазони: `exp=0-1` (junior), `exp=1-3` (middle),
-> `exp=3-5` та `exp=5plus` (senior — обидва фільтри, результати об'єднуються).
+> **DOU.ua note:** category filter uses `?category=Python` (not `search`).
+> Experience levels use ranges: `exp=0-1` (junior), `exp=1-3` (middle),
+> `exp=3-5` and `exp=5plus` (senior — both filters, results merged).
 
-## Конфігурація
+## Configuration
 
-| Параметр | Файл | Опис |
-|----------|------|------|
-| Технології | `config/technologies.yaml` | Ключові слова для пошуку |
-| Категорія DOU | `.env` → `CATEGORY` | Категорія вакансій (за замовч. `Python`) |
-| HTTP delay | `.env` → `REQUEST_DELAY_SECONDS` | Затримка між запитами |
-| Max pages | `.env` → `MAX_PAGES` | Ліміт сторінок пагінації |
+| Parameter | File | Description |
+|-----------|------|-------------|
+| Technologies | `config/technologies.yaml` | Keywords to search for |
+| DOU category | `.env` → `CATEGORY` | Job category (default `Python`) |
+| HTTP delay | `.env` → `REQUEST_DELAY_SECONDS` | Delay between requests |
+| Max pages | `.env` → `MAX_PAGES` | Pagination page limit |
 
-## Тести
+## Tests
 
 ```bash
 pytest
 ```
 
-### Pre-commit (локально)
+### Pre-commit (local)
 
 ```bash
 pip install -e ".[dev]"
@@ -174,9 +174,9 @@ pre-commit install
 pre-commit run --all-files
 ```
 
-CI (GitHub Actions) запускає `flake8`, `black`, `isort` та `pytest` на Python 3.11 і 3.12 при кожному push/PR.
+CI (GitHub Actions) runs `flake8`, `black`, `isort`, and `pytest` on Python 3.11 and 3.12 on every push/PR.
 
-## Майбутні покращення (optional) — реалізовано
+## Optional features (implemented)
 
 ### Async scraping (`aiohttp`)
 
@@ -186,29 +186,30 @@ tech-analyzer scrape --level junior --async --force
 tech-analyzer pipeline --all-levels --async
 ```
 
-Паралельне завантаження деталей вакансій з обмеженням `ASYNC_MAX_CONCURRENCY` (за замовч. 3).
+Parallel detail-page fetching with `ASYNC_MAX_CONCURRENCY` (default 3).
 
-### NLP-аналіз без config (`nltk` + `wordcloud`)
+### NLP analysis without config (`nltk` + `wordcloud`)
 
 ```bash
 pip install -e ".[nlp]"
 tech-analyzer analyze-nlp --latest --level senior
 ```
 
-Генерує `{level}_nlp_stats.json` та `{level}_wordcloud.png` без `technologies.yaml`.
+Produces `{level}_nlp_stats.json` and `{level}_wordcloud.png` without `technologies.yaml`.
 
-### Кореляційний аналіз applications
+### Applications correlation analysis
 
 ```bash
 tech-analyzer analyze-engagement --latest --level senior
 ```
 
-> **Примітка:** DOU.ua показує кількість відгуків лише на частині вакансій. Локація (`віддалено`, місто) парситься зі списку вакансій.
+> **Note:** DOU.ua shows application counts only on some vacancy pages.
+> Location (`remote`, city name) is parsed from the listing page.
 
 ## Disclaimer
 
-Проект збирає лише **публічну** інформацію без авторизації. Дотримуйтесь `robots.txt` та Terms of Service сайту. Використовуйте rate limiting, щоб не перевантажувати сервер.
+This project collects **public** information only, without authentication. Respect the site's `robots.txt` and Terms of Service. Use rate limiting to avoid overloading the server.
 
-## Ліцензія
+## License
 
 MIT
