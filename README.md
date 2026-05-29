@@ -50,8 +50,19 @@ cp .env.example .env
 ### Повний pipeline
 
 ```bash
-tech-analyzer pipeline --all-levels
+# scrape → analyze для junior, middle, senior
+tech-analyzer pipeline --all-levels --force
 ```
+
+Приклад виводу після запуску (2026-05-29):
+
+| Рівень | Фільтр DOU | Вакансій | Топ-3 технології |
+|--------|------------|----------|------------------|
+| junior | `exp=0-1` | 7 | Docker, Git, PostgreSQL |
+| middle | `exp=1-3` | 20 | PostgreSQL, Docker, FastAPI |
+| senior | `exp=3-5` + `exp=5plus` | 40 | CI/CD, Docker, PostgreSQL |
+
+Файли: `data/raw/2026-05-29_{level}.json` та `data/results/2026-05-29/{level}_*`.
 
 ### Окремо: Scraping
 
@@ -89,29 +100,56 @@ tech-analyzer history 2026-05-20 2026-05-29 --level senior
 - `{level}_bar_chart.png` — діаграма топ-технологій
 - `{level}_stats.json` — статистика у JSON
 
-### Діаграма (senior, 2026-05-29, 20 вакансій)
+### Аналіз ринку (знімок 2026-05-29, [jobs.dou.ua](https://jobs.dou.ua))
 
-![Top technologies — Senior](docs/images/senior_bar_chart.png)
+**Загальні висновки:**
 
-### Топ-10 технологій (вивід CLI)
+- **Docker** і **PostgreSQL** — найстабільніший попит: присутні у топ-3 на всіх рівнях досвіду.
+- **CI/CD** різко зростає з рівнем: 57% (junior) → 15% (middle) → **53% (senior)** — для senior це №1 технологія.
+- **FastAPI** найпопулярніший серед middle (40%), тоді як **Django** сильніший на senior (30%).
+- Junior-ринок малий (7 вакансій), але вже вимагає DevOps-базу: Docker (86%), Git (86%), AWS (57%).
+
+**Діаграми по рівнях:**
+
+| Junior (7) | Middle (20) | Senior (40) |
+|:---:|:---:|:---:|
+| ![Junior](docs/images/junior_bar_chart.png) | ![Middle](docs/images/middle_bar_chart.png) | ![Senior](docs/images/senior_bar_chart.png) |
+
+### Топ-5 технологій по рівнях
+
+**Junior** (`exp=0-1`, 7 вакансій):
 
 ```
-Top 10 technologies:
-   1. CI/CD                  13  (65.0%)
-   2. AWS                    11  (55.0%)
-   3. Docker                  8  (40.0%)
-   4. REST                    8  (40.0%)
-   5. Azure                   6  (30.0%)
-   6. React                   6  (30.0%)
-   7. Django                  5  (25.0%)
-   8. Flask                   5  (25.0%)
-   9. PostgreSQL              5  (25.0%)
-  10. Redis                   5  (25.0%)
+   1. Docker        6  (85.7%)
+   2. Git           6  (85.7%)
+   3. PostgreSQL    5  (71.4%)
+   4. AWS           4  (57.1%)
+   5. CI/CD         4  (57.1%)
+```
+
+**Middle** (`exp=1-3`, 20 вакансій):
+
+```
+   1. PostgreSQL    9  (45.0%)
+   2. Docker        9  (45.0%)
+   3. FastAPI       8  (40.0%)
+   4. Git           8  (40.0%)
+   5. Linux         8  (40.0%)
+```
+
+**Senior** (`exp=3-5` + `exp=5plus`, 40 вакансій):
+
+```
+   1. CI/CD        21  (52.5%)
+   2. Docker       19  (47.5%)
+   3. PostgreSQL   18  (45.0%)
+   4. AWS          16  (40.0%)
+   5. Redis        14  (35.0%)
 ```
 
 > **Примітка про DOU.ua:** фільтр категорії використовує `?category=Python` (не `search`).
-> Для рівнів досвіду — `exp=0` (junior), `exp=1` (middle), `exp=5plus` (senior).
-> На момент збору даних junior/middle можуть повертати 0 вакансій — це залежить від поточного ринку, а не від парсера.
+> Для рівнів досвіду DOU використовує діапазони: `exp=0-1` (junior), `exp=1-3` (middle),
+> `exp=3-5` та `exp=5plus` (senior — обидва фільтри, результати об'єднуються).
 
 ## Конфігурація
 
